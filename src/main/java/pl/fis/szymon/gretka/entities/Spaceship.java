@@ -11,22 +11,22 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Spaceship {
 	
-	@NotBlank
+	@NotBlank(message = "{name.notblank}")
 	private String name;
 	
-	@NotNull
-	@Min(value = 0L, message = "The value must be positive")
-	private Integer range;
+	@NotNull(message = "{range.notnull}")
+	@Min(value = 0L, message = "{range.positive}")
+	private Integer speed;
 	
 	@PastOrPresent
 	private LocalTime year_of_manufacturing;
 
 	public Spaceship() {}
 
-	public Spaceship(String name, Integer range, LocalTime time) {
+	public Spaceship(String name, Integer speed, LocalTime time) {
 		super();
 		this.name = name;
-		this.range = range;
+		this.speed = speed;
 		this.year_of_manufacturing = time;
 	}
 	
@@ -37,11 +37,11 @@ public class Spaceship {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public Integer getRange() {
-		return range;
+	public Integer getSpeed() {
+		return speed;
 	}
-	public void setRange(Integer range) {
-		this.range = range;
+	public void setSpeed(Integer speed) {
+		this.speed = speed;
 	}
 	
 	@JsonProperty("year-of-manufacturing") 
@@ -56,7 +56,7 @@ public class Spaceship {
 
 	@Override
 	public String toString() {
-		return "Spaceship [name=" + name + ", range=" + range + "]";
+		return "Spaceship [name=" + name + ", range=" + speed + "]";
 	}
 	
 	

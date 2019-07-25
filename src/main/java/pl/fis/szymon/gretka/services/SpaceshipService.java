@@ -14,4 +14,5 @@ public interface SpaceshipService {
 	public SpaceFleet getSpaceFleet();
 	public Spaceship getByName(String name);
 	public List<Spaceship> getListOfSpaceships();
+	public List<Spaceship> sortList(String param1, String param2, List<Spaceship> list);
 }

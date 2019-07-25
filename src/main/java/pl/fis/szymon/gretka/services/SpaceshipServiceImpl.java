@@ -2,17 +2,21 @@ package pl.fis.szymon.gretka.services;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import pl.fis.szymon.gretka.entities.SpaceFleet;
 import pl.fis.szymon.gretka.entities.Spaceship;
 
 @Service
+//@CacheConfig(cacheNames={"spaceships"})
 public class SpaceshipServiceImpl implements SpaceshipService{
 
 	private List<Spaceship> listOfSpaceships = new ArrayList<>();
@@ -24,8 +28,16 @@ public class SpaceshipServiceImpl implements SpaceshipService{
 	
 	@Override
 	public void initializeSpaceshipsAndSpaceFleet() {
-		listOfSpaceships.add(new Spaceship("venga", 2000, LocalTime.now()));
-		listOfSpaceships.add(new Spaceship("goliath", 8000, LocalTime.now()));
+		listOfSpaceships.add(new Spaceship("Battlestar Galactica", 2000, LocalTime.now()));
+		listOfSpaceships.add(new Spaceship("Elysium", 8000, LocalTime.now()));
+		listOfSpaceships.add(new Spaceship("Reapers", 3000, LocalTime.now()));
+		listOfSpaceships.add(new Spaceship("USS Enterprise", 30000, LocalTime.now()));
+		listOfSpaceships.add(new Spaceship("Spaceball One", 100000, LocalTime.now()));
+		listOfSpaceships.add(new Spaceship("Millennium Falcon", 55, LocalTime.now()));
+		listOfSpaceships.add(new Spaceship("Death Star", 5000, LocalTime.now()));
+		listOfSpaceships.add(new Spaceship("Starkiller Base", 555, LocalTime.now()));
+		listOfSpaceships.add(new Spaceship("The Fighter", 2000, LocalTime.now()));
+		listOfSpaceships.add(new Spaceship("USCSS Prometheus", 8000, LocalTime.now()));
 		
 		spaceFleet.setName("FIS Space Fleet");
 		spaceFleet.setList(listOfSpaceships);
@@ -55,6 +67,7 @@ public class SpaceshipServiceImpl implements SpaceshipService{
 	}
 
 	@Override
+	//@Cacheable
 	public Spaceship getByName(String name) {
 		Spaceship ship = spaceFleet.getList().stream()
 				  .filter(sh -> name.equals(sh.getName()))
@@ -67,6 +80,26 @@ public class SpaceshipServiceImpl implements SpaceshipService{
 	@Override
 	public List<Spaceship> getListOfSpaceships() {
 		return listOfSpaceships;
+	}
+
+	@Override
+	public List<Spaceship> sortList(String param1, String param2, List<Spaceship> list) {
+		List<Spaceship> sortedList = list;
+		
+		if(param1.equals("name") && param2.equals("asc"))
+			sortedList.sort(Comparator.comparing(Spaceship::getName));
+		
+		else if(param1.equals("name") && param2.equals("desc"))
+			sortedList.sort(Comparator.comparing(Spaceship::getName).reversed());
+		
+		else if(param1.equals("speed") && param2.equals("asc"))
+			sortedList.sort(Comparator.comparing(Spaceship::getSpeed));
+		
+		else if(param1.equals("speed") && param2.equals("desc"))
+			sortedList.sort(Comparator.comparing(Spaceship::getSpeed).reversed());
+		
+		
+		return sortedList;
 	}
 
 }
