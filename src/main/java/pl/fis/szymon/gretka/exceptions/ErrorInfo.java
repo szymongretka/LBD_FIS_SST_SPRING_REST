@@ -12,34 +12,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 public class ErrorInfo {
 	
-	/*private int status;
-    private String message;
-    private List<FieldError> fieldErrors = new ArrayList<>();
-    
-
-    ErrorInfo(int status, String message) {
-        this.status = status;
-        this.message = message;
-    }
-
-
-    public int getStatus() {
-        return status;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void addFieldError(String name, String path, String message) {
-        FieldError error = new FieldError(name, path, message);
-        fieldErrors.add(error);
-    }
-
-    public List<FieldError> getFieldErrors() {
-        return fieldErrors;
-    }*/
-	
 	 private HttpStatus status;
 	 
 	 @JsonInclude(JsonInclude.Include.NON_NULL)

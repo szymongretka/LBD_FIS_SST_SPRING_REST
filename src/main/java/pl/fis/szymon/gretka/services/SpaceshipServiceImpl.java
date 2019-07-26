@@ -16,11 +16,10 @@ import pl.fis.szymon.gretka.entities.SpaceFleet;
 import pl.fis.szymon.gretka.entities.Spaceship;
 
 @Service
-//@CacheConfig(cacheNames={"spaceships"})
 public class SpaceshipServiceImpl implements SpaceshipService{
 
 	private List<Spaceship> listOfSpaceships = new ArrayList<>();
-	private SpaceFleet spaceFleet = new SpaceFleet();
+	private SpaceFleet fisSpaceFleet = new SpaceFleet();
 	
 	public SpaceshipServiceImpl() {
 		initializeSpaceshipsAndSpaceFleet();
@@ -39,8 +38,8 @@ public class SpaceshipServiceImpl implements SpaceshipService{
 		listOfSpaceships.add(new Spaceship("The Fighter", 2000, LocalTime.now()));
 		listOfSpaceships.add(new Spaceship("USCSS Prometheus", 8000, LocalTime.now()));
 		
-		spaceFleet.setName("FIS Space Fleet");
-		spaceFleet.setList(listOfSpaceships);
+		fisSpaceFleet.setName("FIS");
+		fisSpaceFleet.setList(listOfSpaceships);
 	}
 
 	@Override
@@ -63,13 +62,12 @@ public class SpaceshipServiceImpl implements SpaceshipService{
 
 	@Override
 	public SpaceFleet getSpaceFleet() {
-		return spaceFleet;
+		return fisSpaceFleet;
 	}
 
 	@Override
-	//@Cacheable
 	public Spaceship getByName(String name) {
-		Spaceship ship = spaceFleet.getList().stream()
+		Spaceship ship = fisSpaceFleet.getList().stream()
 				  .filter(sh -> name.equals(sh.getName()))
 				  .findAny()
 				  .orElse(null);
@@ -100,6 +98,15 @@ public class SpaceshipServiceImpl implements SpaceshipService{
 		
 		
 		return sortedList;
+	}
+
+	@Override
+	public Spaceship getSpaceshipBySpacefleetName(String spaceFleetName, String spaceShipName) {
+		Spaceship ship = getByName(spaceShipName);
+		if(fisSpaceFleet.getName().equals(spaceFleetName)) {
+			return ship;
+		}
+		return null;
 	}
 
 }

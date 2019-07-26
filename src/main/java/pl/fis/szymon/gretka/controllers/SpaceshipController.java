@@ -1,10 +1,16 @@
 package pl.fis.szymon.gretka.controllers;
 
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import javax.validation.Valid;
 
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.Resources;
 import org.springframework.http.CacheControl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -74,14 +80,40 @@ public class SpaceshipController {
 		spaceshipService.save(spaceship);
 	}
 	
-	@GetMapping("v4/space-fleet/ships")
-	public List<Spaceship> getListOfSpaceShipsV4(@RequestParam(value = "sortByDescription", defaultValue = "name") String param1, 
+	@GetMapping("v4/space-fleet/{fleetName}/ships")
+	public Resources<Spaceship> getListOfSpaceShipsV4(@PathVariable String fleetName, 
+			@RequestParam(value = "sortByDescription", defaultValue = "name") String param1, 
 			@RequestParam(value = "sort", defaultValue = "asc") String param2){
+		
 		List<Spaceship> sortedShips = spaceshipService.sortList(param1, param2, 
 				spaceshipService.getListOfSpaceships());
-	
-		return sortedShips;
+		
+	    for (final Spaceship ship : sortedShips) {
+	        Link selfLink = linkTo(methodOn(SpaceshipController.class)
+	        		.getSpaceShipBYSpaceFleetName(fleetName, ship.getName())).withSelfRel();
+	        ship.add(selfLink);
+	    }
+	  
+	    
+	    Link link = linkTo(methodOn(SpaceshipController.class)
+	      .getSpaceFleet(fleetName)).withSelfRel();
+	    Resources<Spaceship> result = new Resources<Spaceship>(sortedShips, link);
+	    return result;
+
 	}
+	
+	@GetMapping("v4/space-fleet/{fleetName}")
+	public SpaceFleet getSpaceFleet(@PathVariable final String name) {
+		return spaceshipService.getSpaceFleet();
+	}
+	
+
+    @GetMapping("/{fleetName}/{shipName}")
+    public Spaceship getSpaceShipBYSpaceFleetName(@PathVariable final String fleetName, 
+    				@PathVariable final String shipName) {
+        return spaceshipService.getSpaceshipBySpacefleetName(fleetName, shipName);
+    }
+	
 	
 
 }

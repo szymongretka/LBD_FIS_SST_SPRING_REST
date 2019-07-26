@@ -60,29 +60,6 @@ public class MyExceptionHandler extends ResponseEntityExceptionHandler {
 	    		.substring(ex.toString()
 	    				.lastIndexOf(':') + 1));
 	} 
-	
-	
-	
-	
-	
-	
-	/*@ResponseStatus(HttpStatus.BAD_REQUEST)
-	@ExceptionHandler(MethodArgumentNotValidException.class)
-	@ResponseBody
-	public ErrorInfo handleBadRequest(final MethodArgumentNotValidException ex) {
-        BindingResult result = ex.getBindingResult();
-        List<FieldError> fieldErrors = result.getFieldErrors();
-        return processFieldErrors(fieldErrors);
-    }
-	
-	
-    private ErrorInfo processFieldErrors(List<FieldError> fieldErrors) {
-        ErrorInfo error = new ErrorInfo(HttpStatus.BAD_REQUEST.value(), "validation error");
-        for (FieldError fieldError: fieldErrors) {
-            error.addFieldError(fieldError.getObjectName(), fieldError.getField(), fieldError.getDefaultMessage());
-        }
-        return error;
-    }*/
     
 	
 }

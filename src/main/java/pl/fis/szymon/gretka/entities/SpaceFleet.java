@@ -33,6 +33,11 @@ public class SpaceFleet implements Serializable {
 	public void setList(List<Spaceship> ships) {
 		this.ships = ships;
 	}
+	
+	public List<Spaceship> getListBySpacefleetName(String name) {
+		return ships;
+	}
+	
 
 	@Override
 	public String toString() {

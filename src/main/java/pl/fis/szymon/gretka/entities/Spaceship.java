@@ -7,9 +7,11 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 
+import org.springframework.hateoas.ResourceSupport;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Spaceship {
+public class Spaceship extends ResourceSupport {
 	
 	@NotBlank(message = "{name.notblank}")
 	private String name;
