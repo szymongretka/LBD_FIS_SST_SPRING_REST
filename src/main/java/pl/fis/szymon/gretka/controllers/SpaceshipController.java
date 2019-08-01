@@ -61,12 +61,12 @@ public class SpaceshipController {
 	}
 	
 	@ApiOperation(value = "Is Unique", notes = "Get spaceships")
-	@GetMapping(path = "v4/space-fleet", produces = "application/json")
-	public ResponseEntity<SpaceFleet> getSpaceFleetV4() {
+	@GetMapping(path = "v4/space-fleet/{fleetName}", produces = "application/json")
+	public ResponseEntity<SpaceFleet> getSpaceFleetV4(@PathVariable String fleetName) {
 		
 		return ResponseEntity.ok()
 			      .cacheControl(CacheControl.maxAge(5, TimeUnit.MINUTES))
-			      .body(spaceshipService.getSpaceFleet());
+			      .body(spaceshipService.getSpaceFleet(fleetName));
 		
 		//return spaceshipService.getSpaceFleet();
 	}
@@ -75,9 +75,9 @@ public class SpaceshipController {
     @ApiResponses(value = {
             @ApiResponse(code = 202, message = "Request Accepted"),
             @ApiResponse(code = 400, message = "Bad Request") })
-	@PostMapping(path = "v4/space-fleet", consumes = "application/json", produces = "application/json")
-	public void createSpaceshipInSpaceFleetV4(@RequestBody @Valid Spaceship spaceship) { 
-		spaceshipService.save(spaceship);
+	@PostMapping(path = "v4/space-fleet/{fleetName}", consumes = "application/json", produces = "application/json")
+	public void createSpaceshipInSpaceFleetV4(@RequestBody @Valid Spaceship spaceship, @PathVariable String fleetName) { 
+		spaceshipService.save(fleetName, spaceship);
 	}
 	
 	@GetMapping("v4/space-fleet/{fleetName}/ships")
@@ -86,7 +86,7 @@ public class SpaceshipController {
 			@RequestParam(value = "sort", defaultValue = "asc") String param2){
 		
 		List<Spaceship> sortedShips = spaceshipService.sortList(param1, param2, 
-				spaceshipService.getListOfSpaceships());
+				spaceshipService.getListOfSpaceships(fleetName));
 		
 	    for (final Spaceship ship : sortedShips) {
 	        Link selfLink = linkTo(methodOn(SpaceshipController.class)
@@ -96,15 +96,15 @@ public class SpaceshipController {
 	  
 	    
 	    Link link = linkTo(methodOn(SpaceshipController.class)
-	      .getSpaceFleet(fleetName)).withSelfRel();
+	      .getSpaceFleetByName(fleetName)).withSelfRel();
 	    Resources<Spaceship> result = new Resources<Spaceship>(sortedShips, link);
 	    return result;
 
 	}
 	
 	@GetMapping("v4/space-fleet/{fleetName}")
-	public SpaceFleet getSpaceFleet(@PathVariable final String name) {
-		return spaceshipService.getSpaceFleet();
+	public SpaceFleet getSpaceFleetByName(@PathVariable final String name) {
+		return spaceshipService.getSpaceFleet(name);
 	}
 	
 

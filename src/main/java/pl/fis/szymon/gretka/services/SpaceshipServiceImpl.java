@@ -3,8 +3,10 @@ package pl.fis.szymon.gretka.services;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
@@ -18,8 +20,9 @@ import pl.fis.szymon.gretka.entities.Spaceship;
 @Service
 public class SpaceshipServiceImpl implements SpaceshipService{
 
-	private List<Spaceship> listOfSpaceships = new ArrayList<>();
+	private Map<String,List<Spaceship>> map = new HashMap<>();
 	private SpaceFleet fisSpaceFleet = new SpaceFleet();
+	private List<Spaceship> listOfFisSpaceships = new ArrayList<>(); 
 	
 	public SpaceshipServiceImpl() {
 		initializeSpaceshipsAndSpaceFleet();
@@ -27,42 +30,44 @@ public class SpaceshipServiceImpl implements SpaceshipService{
 	
 	@Override
 	public void initializeSpaceshipsAndSpaceFleet() {
-		listOfSpaceships.add(new Spaceship("Battlestar Galactica", 2000, LocalTime.now()));
-		listOfSpaceships.add(new Spaceship("Elysium", 8000, LocalTime.now()));
-		listOfSpaceships.add(new Spaceship("Reapers", 3000, LocalTime.now()));
-		listOfSpaceships.add(new Spaceship("USS Enterprise", 30000, LocalTime.now()));
-		listOfSpaceships.add(new Spaceship("Spaceball One", 100000, LocalTime.now()));
-		listOfSpaceships.add(new Spaceship("Millennium Falcon", 55, LocalTime.now()));
-		listOfSpaceships.add(new Spaceship("Death Star", 5000, LocalTime.now()));
-		listOfSpaceships.add(new Spaceship("Starkiller Base", 555, LocalTime.now()));
-		listOfSpaceships.add(new Spaceship("The Fighter", 2000, LocalTime.now()));
-		listOfSpaceships.add(new Spaceship("USCSS Prometheus", 8000, LocalTime.now()));
+		listOfFisSpaceships.add(new Spaceship("Battlestar Galactica", 2000, LocalTime.now()));
+		listOfFisSpaceships.add(new Spaceship("Elysium", 8000, LocalTime.now()));
+		listOfFisSpaceships.add(new Spaceship("Reapers", 3000, LocalTime.now()));
+		listOfFisSpaceships.add(new Spaceship("USS Enterprise", 30000, LocalTime.now()));
+		listOfFisSpaceships.add(new Spaceship("Spaceball One", 100000, LocalTime.now()));
+		listOfFisSpaceships.add(new Spaceship("Millennium Falcon", 55, LocalTime.now()));
+		listOfFisSpaceships.add(new Spaceship("Death Star", 5000, LocalTime.now()));
+		listOfFisSpaceships.add(new Spaceship("Starkiller Base", 555, LocalTime.now()));
+		listOfFisSpaceships.add(new Spaceship("The Fighter", 2000, LocalTime.now()));
+		listOfFisSpaceships.add(new Spaceship("USCSS Prometheus", 8000, LocalTime.now()));
 		
 		fisSpaceFleet.setName("FIS");
-		fisSpaceFleet.setList(listOfSpaceships);
+		fisSpaceFleet.setList(listOfFisSpaceships);
+		
+		map.put(fisSpaceFleet.getName(), fisSpaceFleet.getList());
 	}
 
 	@Override
-	public void save(Spaceship spaceship) {
-		listOfSpaceships.add(spaceship);
+	public void save(String spacefleetName, Spaceship spaceship) {
+		map.get(spacefleetName).add(spaceship);
 		
 	}
 
 	@Override
-	public void delete(String name) {
-		Iterator<Spaceship> iterator = listOfSpaceships.iterator();
+	public void delete(String spacefleetName, String shipName) {
+		Iterator<Spaceship> iterator = map.get(spacefleetName).iterator();
 	    while (iterator.hasNext()) {
 	    	Spaceship spaceship = iterator.next();
-	        if (spaceship.getName().equals(name)) {
-	            listOfSpaceships.remove(spaceship);
+	        if (spaceship.getName().equals(shipName)) {
+	            listOfFisSpaceships.remove(spaceship);
 	        }
 	    }
 		
 	}
 
 	@Override
-	public SpaceFleet getSpaceFleet() {
-		return fisSpaceFleet;
+	public SpaceFleet getSpaceFleet(String name) {
+		return new SpaceFleet(name, map.get(name));
 	}
 
 	@Override
@@ -76,8 +81,8 @@ public class SpaceshipServiceImpl implements SpaceshipService{
 	}
 
 	@Override
-	public List<Spaceship> getListOfSpaceships() {
-		return listOfSpaceships;
+	public List<Spaceship> getListOfSpaceships(String spacefleetName) {
+		return map.get(spacefleetName);
 	}
 
 	@Override
